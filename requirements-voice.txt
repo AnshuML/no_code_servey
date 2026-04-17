@@ -1,0 +1,5 @@
+# Optional: local Whisper STT (open source). Use after base requirements.
+# pip install -r requirements-voice.txt
+
+-r requirements.txt
+faster-whisper>=1.0.3

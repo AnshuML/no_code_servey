@@ -1,0 +1,23 @@
+
+
+
+Problem statement Identified : The National Sample Survey under MoSPI collects comprehensive socio-economic data from households and enterprises. Government data collection continues to rely heavily on conventional survey tools that enumerator driven. They are also difficulty in conducting surveys due to the India’s language diversity. With the increased penetration of smartphones, AI, and messaging platforms like WhatsApp, there's a strong opportunity to redesign how official surveys are built and deployed. The problem is to develop a smart, AI-enabled tool that can make data collection more efficient, inclusive, and intelligent serving the evolving needs of national statistical systems.
+
+Methodology used for identifying the problem statement :
+
+Challenges imposed and needed for solving them :
+
+Existing processes/systems in place to deal with the challenges :
+
+Expected outcome(s) for stakeholders’ post resolution : Participants should aim to deliver the following: • A working prototype of an AI-powered smart survey tool (web, mobile, or hybrid). • No-code/prompt-based survey builder, with question bank integration. • Support for multi-channel survey delivery (e.g., WhatsApp, phone call, AI avatar). • Prepopulation using identifiers; multilingual and voice-based interfaces. • AI-driven customised questioning and real-time validation. • Paradata capture (time, location, device, mode) and quality flagging. • Auto-coding of responses and structured data storage. • Dashboard for monitoring enumerator performance and data quality. • Code, documentation, and brief implementation summary or pitch.
+
+How urgent do you consider it to solve this problem? : Medium Priority: The problem affects productivity or efficiency but does not halt operations. It should be addressed within a reasonable timeframe.
+
+Expected timeline for resolution? :
+
+Share any global best practices you'd like to highlight? :
+
+Proposed solutions :
+
+Analysis of the feasibility of the solution :
+
