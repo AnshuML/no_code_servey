@@ -31,6 +31,7 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         extra="ignore",
         case_sensitive=False,
+        populate_by_name=True,
     )
 
     environment: Environment = Field(
@@ -79,6 +80,37 @@ class Settings(BaseSettings):
         validation_alias=AliasChoices("SURVEY_WHISPER_LANGUAGE", "WHISPER_LANGUAGE"),
     )
 
+    # WhatsApp Cloud API (optional channel). See docs/WHATSAPP_SETUP.md
+    whatsapp_verify_token: str = Field(
+        default="",
+        description="Webhook verify token (Meta dashboard).",
+        validation_alias="WHATSAPP_VERIFY_TOKEN",
+    )
+    whatsapp_access_token: str = Field(
+        default="",
+        description="Graph API permanent or system user token for sending.",
+        validation_alias=AliasChoices("WHATSAPP_ACCESS_TOKEN", "WHATSAPP_TOKEN"),
+    )
+    whatsapp_phone_number_id: str = Field(
+        default="",
+        description="WhatsApp phone_number_id from Meta.",
+        validation_alias="WHATSAPP_PHONE_NUMBER_ID",
+    )
+    whatsapp_app_secret: str = Field(
+        default="",
+        description="Optional App Secret for X-Hub-Signature-256 verification.",
+        validation_alias="WHATSAPP_APP_SECRET",
+    )
+    whatsapp_graph_api_version: str = Field(
+        default="v21.0",
+        validation_alias="WHATSAPP_GRAPH_VERSION",
+    )
+    whatsapp_survey_json_path: str = Field(
+        default="",
+        description="Optional UTF-8 JSON file path; default = bundled family survey.",
+        validation_alias="WHATSAPP_SURVEY_JSON",
+    )
+
     @field_validator("log_level", mode="before")
     @classmethod
     def normalize_log_level(cls, value: Any) -> str:
@@ -105,7 +137,15 @@ class Settings(BaseSettings):
             )
         return value.strip().upper()
 
-    @field_validator("groq_api_key", "huggingface_token", mode="before")
+    @field_validator(
+        "groq_api_key",
+        "huggingface_token",
+        "whatsapp_verify_token",
+        "whatsapp_access_token",
+        "whatsapp_phone_number_id",
+        "whatsapp_app_secret",
+        mode="before",
+    )
     @classmethod
     def strip_secrets(cls, value: Any) -> str:
         """Strip whitespace from secret fields; coerce ``None`` to empty string.
@@ -122,6 +162,30 @@ class Settings(BaseSettings):
             raise ConfigurationError(
                 "API token fields must be strings",
                 details={"field": "secrets", "got": type(value).__name__},
+            )
+        return value.strip()
+
+    @field_validator("whatsapp_graph_api_version", mode="before")
+    @classmethod
+    def whatsapp_graph_version_or_default(cls, value: Any) -> str:
+        if value is None or (isinstance(value, str) and not value.strip()):
+            return "v21.0"
+        if not isinstance(value, str):
+            raise ConfigurationError(
+                "WHATSAPP_GRAPH_VERSION must be a string",
+                details={"got": type(value).__name__},
+            )
+        return value.strip()
+
+    @field_validator("whatsapp_survey_json_path", mode="before")
+    @classmethod
+    def strip_whatsapp_survey_path(cls, value: Any) -> str:
+        if value is None:
+            return ""
+        if not isinstance(value, str):
+            raise ConfigurationError(
+                "WHATSAPP_SURVEY_JSON must be a string",
+                details={"got": type(value).__name__},
             )
         return value.strip()
 
@@ -248,6 +312,11 @@ def _safe_settings_summary(settings: Settings) -> dict[str, Any]:
         "whisper_device": settings.whisper_device,
         "whisper_compute_type": settings.whisper_compute_type,
         "whisper_language_set": bool(settings.whisper_language.strip()),
+        "whatsapp_webhook_ready": bool(settings.whatsapp_verify_token.strip()),
+        "whatsapp_send_ready": bool(
+            settings.whatsapp_access_token.strip() and settings.whatsapp_phone_number_id.strip()
+        ),
+        "whatsapp_survey_json_set": bool(settings.whatsapp_survey_json_path.strip()),
     }
 
 

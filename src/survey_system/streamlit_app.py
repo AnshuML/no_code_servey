@@ -15,6 +15,7 @@ from survey_system.ai.engine import SurveyAIEngine
 from survey_system.ai.groq_client import GroqClient
 from survey_system.chat.session import SurveyChatSession
 from survey_system.config import Settings, get_settings
+from survey_system.demodata.family_survey import FAMILY_SURVEY_PAYLOAD
 from survey_system.logger import configure_logging, get_logger
 from survey_system.schema.survey import survey_from_dict
 from survey_system.survey_builder.builder import build_survey_from_prompt
@@ -75,80 +76,6 @@ def _render_completion_form(answers: dict[str, Any]) -> None:
 
     with st.expander("Raw JSON (technical)", expanded=False):
         st.json(answers)
-
-_FAMILY_SURVEY: dict[str, Any] = {
-    "schema_version": "1.0",
-    "id": "family_survey_hindi",
-    "title": "Parivar / Family survey",
-    "questions": [
-        {
-            "id": "total_members",
-            "text": (
-                "Aapki family mein kul kitne log hain? "
-                "(Khud ko bhi giniye — number bataiye.)"
-            ),
-            "type": "number",
-            "required": True,
-            "min_value": 1,
-            "max_value": 30,
-        },
-        {
-            "id": "monthly_income_inr",
-            "text": (
-                "Ghar ki kul monthly income lagbhag kitni hai? "
-                "Sirf number bataiye (₹ — Indian Rupees)."
-            ),
-            "type": "number",
-            "required": True,
-            "min_value": 0,
-            "max_value": 100000000,
-        },
-        {
-            "id": "father_name",
-            "text": "Pita ji (father) ka poora naam kya hai?",
-            "type": "free_text",
-            "required": True,
-        },
-        {
-            "id": "father_occupation",
-            "text": "Pita ji kya kaam karte hain? (naukri, business, kheti, retired, etc.)",
-            "type": "free_text",
-            "required": True,
-        },
-        {
-            "id": "mother_name",
-            "text": "Mata ji (mother) ka poora naam kya hai?",
-            "type": "free_text",
-            "required": True,
-        },
-        {
-            "id": "mother_occupation",
-            "text": "Mata ji kya karti hain? (naukri, ghar sambhalna, business, etc.)",
-            "type": "free_text",
-            "required": True,
-        },
-        {
-            "id": "members_detail",
-            "text": (
-                "Har family member ke baare mein likhiye: naam, ladka hai ya ladki, "
-                "aur wo kya karte hain (padhai, kaam, chhota bachcha, etc.). "
-                "Ek line mein ek member — jitne members bataye, sab cover karein."
-            ),
-            "type": "free_text",
-            "required": True,
-        },
-        {
-            "id": "consent",
-            "text": (
-                "Kya aap ye parivar survey poora karne ke liye sahmat hain "
-                "aur jo jawab diye hain wo sahi maan sakte hain?"
-            ),
-            "type": "yes_no",
-            "required": True,
-        },
-    ],
-}
-
 
 def _inject_styles() -> None:
     """Inject global CSS tuned for Streamlit dark theme (see .streamlit/config.toml)."""
@@ -315,7 +242,7 @@ def _active_survey_payload() -> dict[str, Any]:
     """Return the JSON dict for the survey currently in use (prompt-built or family demo)."""
     custom = st.session_state.get(_ACTIVE_SURVEY_KEY)
     if custom is None:
-        return _FAMILY_SURVEY
+        return FAMILY_SURVEY_PAYLOAD
     return custom
 
 

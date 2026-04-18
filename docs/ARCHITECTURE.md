@@ -10,7 +10,7 @@ This repo follows a **ports-and-adapters** (hexagonal) layout so you can swap in
 | **Application** | One session = one respondent run | `chat/session.py` (`SurveyChatSession`) |
 | **Ports** | Interfaces only (Protocols) | `ports/persistence.py`, `ports/speech.py` |
 | **Adapters** | Concrete I/O | `adapters/persistence/memory.py`, future `adapters/persistence/sqlite.py` |
-| **Delivery** | UI / messaging | `streamlit_app.py` today; future FastAPI + Telegram/Matrix |
+| **Delivery** | UI / messaging | `streamlit_app.py` (web); `whatsapp_server.py` + `whatsapp/` (Meta Cloud API webhook, per-`wa_id` sessions) |
 
 ## Swap points (production)
 
